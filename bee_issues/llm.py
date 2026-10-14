@@ -1,6 +1,8 @@
 """Minimal LLM client: Anthropic Claude API (default), Claude on Amazon Bedrock, or DeepSeek."""
 from __future__ import annotations
 
+import time
+
 import requests
 
 from bee_issues.config import SUPPORTED_PROVIDERS, Settings
@@ -11,6 +13,24 @@ MAX_OUTPUT_TOKENS = 4096
 
 class LLMError(RuntimeError):
     pass
+
+
+RETRY_STATUS = {429, 500, 502, 503, 504}
+
+
+def _post(url: str, attempts: int = 3, backoff: float = 2.0, **kwargs) -> requests.Response:
+    """requests.post with retries on network errors, rate limits and server errors."""
+    for attempt in range(1, attempts + 1):
+        try:
+            response = requests.post(url, **kwargs)
+        except requests.RequestException as exc:
+            if attempt == attempts:
+                raise LLMError(f"Network error calling {url}: {exc}") from exc
+        else:
+            if response.status_code not in RETRY_STATUS or attempt == attempts:
+                return response
+        time.sleep(backoff * attempt)
+    raise AssertionError("unreachable")
 
 
 def model_name(settings: Settings) -> str:
@@ -37,7 +57,7 @@ def complete(system: str, user: str, settings: Settings, timeout: int = 120) -> 
 def _anthropic(system: str, user: str, settings: Settings, timeout: int) -> str:
     if not settings.anthropic_api_key:
         raise LLMError("ANTHROPIC_API_KEY is not set. Add it to your .env file.")
-    response = requests.post(
+    response = _post(
         ANTHROPIC_URL,
         headers={
             "x-api-key": settings.anthropic_api_key,
@@ -62,7 +82,7 @@ def _deepseek(system: str, user: str, settings: Settings, timeout: int) -> str:
     """DeepSeek's OpenAI-compatible chat completions API, in JSON mode."""
     if not settings.deepseek_api_key:
         raise LLMError("DEEPSEEK_API_KEY is not set. Add it to your .env file.")
-    response = requests.post(
+    response = _post(
         f"{settings.deepseek_base_url.rstrip('/')}/chat/completions",
         headers={
             "Authorization": f"Bearer {settings.deepseek_api_key}",

@@ -1,0 +1,67 @@
+{
+  "_note": "Synthetic evaluation case written by hand. NOT a real Bee recording.",
+  "timezone": "Asia/Hong_Kong",
+  "conversation": {
+    "id": 1002,
+    "start_time": 1792902000000,
+    "summary": "Pair debugging session about authentication and a dashboard request.",
+    "state": "COMPLETED",
+    "transcriptions": [
+      {
+        "id": 1,
+        "realtime": false,
+        "utterances": [
+          {
+            "id": 1,
+            "realtime": false,
+            "spoken_at": 1792902000000,
+            "speaker": "speaker_1",
+            "text": "So the off token refresh is broken again, when the access token expires the app logs you out instead of refreshing."
+          },
+          {
+            "id": 2,
+            "realtime": false,
+            "spoken_at": 1792902015000,
+            "speaker": "speaker_2",
+            "text": "Yeah I saw that, I think the refresh call goes to the old slash API slash V1 path."
+          },
+          {
+            "id": 3,
+            "realtime": false,
+            "spoken_at": 1792902030000,
+            "speaker": "speaker_1",
+            "text": "Right, we moved it to V2 last week. Can you check the interceptor?"
+          },
+          {
+            "id": 4,
+            "realtime": false,
+            "spoken_at": 1792902045000,
+            "speaker": "speaker_2",
+            "text": "Sure. Also product asked if we can add a dark mode toggle on the dashboard."
+          },
+          {
+            "id": 5,
+            "realtime": false,
+            "spoken_at": 1792902060000,
+            "speaker": "speaker_1",
+            "text": "Hmm okay, low priority but let's track it."
+          },
+          {
+            "id": 6,
+            "realtime": false,
+            "spoken_at": 1792902075000,
+            "speaker": "speaker_2",
+            "text": "By the way did you watch the game last night?"
+          },
+          {
+            "id": 7,
+            "realtime": false,
+            "spoken_at": 1792902090000,
+            "speaker": "speaker_1",
+            "text": "No, I was asleep, tell me later."
+          }
+        ]
+      }
+    ]
+  }
+}

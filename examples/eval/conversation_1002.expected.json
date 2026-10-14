@@ -1,0 +1,19 @@
+{
+  "_note": "Hand-written expected issues for the synthetic case of the same id.",
+  "conversation_id": 1002,
+  "expected": [
+    {
+      "type": "bug",
+      "keywords": [
+        "refresh",
+        "token"
+      ]
+    },
+    {
+      "type": "feature",
+      "keywords": [
+        "dark mode"
+      ]
+    }
+  ]
+}

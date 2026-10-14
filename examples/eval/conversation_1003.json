@@ -1,0 +1,46 @@
+{
+  "_note": "Synthetic evaluation case written by hand. NOT a real Bee recording.",
+  "timezone": "Asia/Hong_Kong",
+  "conversation": {
+    "id": 1003,
+    "start_time": 1792903000000,
+    "summary": "Casual chat about weekend plans and food.",
+    "state": "COMPLETED",
+    "transcriptions": [
+      {
+        "id": 1,
+        "realtime": false,
+        "utterances": [
+          {
+            "id": 1,
+            "realtime": false,
+            "spoken_at": 1792903000000,
+            "speaker": "speaker_1",
+            "text": "Are you going hiking this weekend?"
+          },
+          {
+            "id": 2,
+            "realtime": false,
+            "spoken_at": 1792903015000,
+            "speaker": "speaker_2",
+            "text": "Maybe, if it doesn't rain. Dragon's Back again?"
+          },
+          {
+            "id": 3,
+            "realtime": false,
+            "spoken_at": 1792903030000,
+            "speaker": "speaker_1",
+            "text": "Sure. And we should try that new ramen place after."
+          },
+          {
+            "id": 4,
+            "realtime": false,
+            "spoken_at": 1792903045000,
+            "speaker": "speaker_2",
+            "text": "Deal. I need to fix my bike too, the chain keeps slipping."
+          }
+        ]
+      }
+    ]
+  }
+}

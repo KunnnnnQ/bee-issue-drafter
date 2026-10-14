@@ -1,0 +1,19 @@
+{
+  "_note": "Hand-written expected issues for the synthetic case of the same id.",
+  "conversation_id": 1004,
+  "expected": [
+    {
+      "type": "bug",
+      "keywords": [
+        "csv",
+        "export"
+      ]
+    },
+    {
+      "type": "question",
+      "keywords": [
+        "rate limit"
+      ]
+    }
+  ]
+}

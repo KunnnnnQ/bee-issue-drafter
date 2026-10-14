@@ -1,5 +1,7 @@
 # bee-issue-drafter
 
+[![tests](https://github.com/KunnnnnQ/bee-issue-drafter/actions/workflows/tests.yml/badge.svg)](https://github.com/KunnnnnQ/bee-issue-drafter/actions/workflows/tests.yml)
+
 Turn technical discussions recorded by a [Bee](https://bee.computer) wearable into
 reviewable GitHub issue drafts.
 
@@ -19,7 +21,7 @@ Bee device / Apple Watch
 Bee CLI  -- bee conversations get <id> --json -->  transcript (utterances U1, U2, ...)
         |
         v
-LLM (Claude API or Claude on Amazon Bedrock)
+LLM (DeepSeek, Claude API or Claude on Amazon Bedrock)
         |  returns structured JSON: title, type, summary, acceptance criteria,
         |  and the transcript line labels it used as evidence
         v
@@ -141,6 +143,20 @@ A draft matches an expected item when all keywords appear in its title, summary 
 (or, without keywords, when the titles are similar). Each side is matched at most once.
 Unmatched drafts count as false positives, for example chit-chat turned into an issue.
 Keep expected files for real recordings under `data/`, which is git-ignored.
+
+`examples/eval/` holds synthetic cases for the hard parts: speech recognition errors
+("off token" for "auth token"), pure chit-chat that must produce no issues, one bug mentioned
+twice, and work that is already done. To run the whole set:
+
+```powershell
+Get-ChildItem examples\eval\conversation_*.json -Exclude *.expected.json |
+  ForEach-Object { python -m bee_issues draft --input-json $_.FullName --out-dir data\evalrun }
+python -m bee_issues draft --input-json examples\sample_conversation.json --out-dir data\evalrun
+python -m bee_issues eval examples\sample_conversation.expected.json (Get-ChildItem examples\eval\*.expected.json) --drafts-dir data\evalrun
+```
+
+Result on 2026-10-14 with `deepseek-chat`: 8 of 8 expected issues found, 0 extra
+(precision 1.00, recall 1.00). These cases are hand-written and cleaner than real recordings.
 
 ## Privacy
 

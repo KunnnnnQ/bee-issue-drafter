@@ -1,0 +1,60 @@
+{
+  "_note": "Synthetic evaluation case written by hand. NOT a real Bee recording.",
+  "timezone": "Asia/Hong_Kong",
+  "conversation": {
+    "id": 1004,
+    "start_time": 1792904000000,
+    "summary": "Stand-up: CSV export crash mentioned twice, a question about rate limits, and a fix already done.",
+    "state": "COMPLETED",
+    "transcriptions": [
+      {
+        "id": 1,
+        "realtime": false,
+        "utterances": [
+          {
+            "id": 1,
+            "realtime": false,
+            "spoken_at": 1792904000000,
+            "speaker": "speaker_1",
+            "text": "Yesterday I fixed the CORS error on the staging API, that's merged and deployed."
+          },
+          {
+            "id": 2,
+            "realtime": false,
+            "spoken_at": 1792904015000,
+            "speaker": "speaker_2",
+            "text": "Nice. The CSV export crashes when a report has more than ten thousand rows."
+          },
+          {
+            "id": 3,
+            "realtime": false,
+            "spoken_at": 1792904030000,
+            "speaker": "speaker_1",
+            "text": "Is it a memory thing?"
+          },
+          {
+            "id": 4,
+            "realtime": false,
+            "spoken_at": 1792904045000,
+            "speaker": "speaker_2",
+            "text": "Probably, it loads everything into memory before writing."
+          },
+          {
+            "id": 5,
+            "realtime": false,
+            "spoken_at": 1792904060000,
+            "speaker": "speaker_3",
+            "text": "We still don't know what rate limit the partner API allows. Someone should ask them."
+          },
+          {
+            "id": 6,
+            "realtime": false,
+            "spoken_at": 1792904075000,
+            "speaker": "speaker_2",
+            "text": "And again, the export crash, a customer reported it this morning too, so it's urgent."
+          }
+        ]
+      }
+    ]
+  }
+}

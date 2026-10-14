@@ -40,3 +40,31 @@ def test_deepseek_errors(monkeypatch):
     monkeypatch.setattr(llm.requests, "post", lambda *a, **k: FakeResponse(401, {"error": "bad key"}))
     with pytest.raises(LLMError, match="401"):
         llm.complete("s", "u", Settings(llm_provider="deepseek", deepseek_api_key="k"))
+
+
+def test_retries_network_errors_and_server_errors(monkeypatch):
+    replies = [
+        llm.requests.ConnectionError("reset"),
+        FakeResponse(503, {"error": "busy"}),
+        FakeResponse(200, {"choices": [{"message": {"content": "ok"}}]}),
+    ]
+
+    def fake_post(url, **kwargs):
+        reply = replies.pop(0)
+        if isinstance(reply, Exception):
+            raise reply
+        return reply
+
+    monkeypatch.setattr(llm.requests, "post", fake_post)
+    monkeypatch.setattr(llm.time, "sleep", lambda seconds: None)
+    assert llm.complete("s", "u", Settings(llm_provider="deepseek", deepseek_api_key="k")) == "ok"
+
+
+def test_network_error_after_retries_is_llm_error(monkeypatch):
+    def fake_post(url, **kwargs):
+        raise llm.requests.Timeout("slow")
+
+    monkeypatch.setattr(llm.requests, "post", fake_post)
+    monkeypatch.setattr(llm.time, "sleep", lambda seconds: None)
+    with pytest.raises(LLMError, match="Network error"):
+        llm.complete("s", "u", Settings(llm_provider="deepseek", deepseek_api_key="k"))
