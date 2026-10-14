@@ -1,0 +1,4 @@
+requests>=2.31
+python-dotenv>=1.0
+# Only needed when LLM_PROVIDER=bedrock:
+# boto3>=1.34

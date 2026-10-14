@@ -1,0 +1,43 @@
+{
+  "_note": "Synthetic test data written by hand. It is NOT a real Bee recording.",
+  "timezone": "Asia/Hong_Kong",
+  "conversation": {
+    "id": 4242,
+    "start_time": 1791700000000,
+    "end_time": 1791700600000,
+    "device_type": "bee",
+    "summary": "Team discussed a login timeout bug and adding CSV export.",
+    "short_summary": "Login bug and CSV export",
+    "state": "COMPLETED",
+    "created_at": 1791700000000,
+    "updated_at": 1791700600000,
+    "transcriptions": [
+      {
+        "id": 1,
+        "realtime": true,
+        "utterances": [
+          {"id": 900, "realtime": true, "start": null, "end": null, "spoken_at": 1791700001000,
+           "text": "realtime draft text that should be ignored", "speaker": "speaker_1", "created_at": 1791700001000}
+        ]
+      },
+      {
+        "id": 2,
+        "realtime": false,
+        "utterances": [
+          {"id": 12, "realtime": false, "start": null, "end": null, "spoken_at": 1791700030000,
+           "text": "It happens every time the token expires, the page just spins.", "speaker": "speaker_2", "created_at": 1791700030000},
+          {"id": 11, "realtime": false, "start": null, "end": null, "spoken_at": 1791700010000,
+           "text": "The login page times out after thirty seconds on the staging server.", "speaker": "speaker_1", "created_at": 1791700010000},
+          {"id": 13, "realtime": false, "start": null, "end": null, "spoken_at": 1791700040000,
+           "text": "   ", "speaker": "speaker_1", "created_at": 1791700040000},
+          {"id": 14, "realtime": false, "start": null, "end": null, "spoken_at": 1791700050000,
+           "text": "We should also add a CSV export button to the reports page.", "speaker": "speaker_1", "created_at": 1791700050000},
+          {"id": 15, "realtime": false, "start": null, "end": null, "spoken_at": 1791700060000,
+           "text": "Anyway, lunch at noon?", "speaker": "speaker_2", "created_at": 1791700060000}
+        ]
+      }
+    ],
+    "suggested_links": [],
+    "primary_location": null
+  }
+}

@@ -1,0 +1,14 @@
+# Secrets
+.env
+
+# Personal data produced by the tool (Bee transcripts, drafts, your own eval files)
+drafts/
+bee-sync/
+data/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/

@@ -1,0 +1,10 @@
+{
+  "_note": "Hand-written list of the issues a good run should produce for examples/sample_conversation.json. Used by `python -m bee_issues eval`.",
+  "conversation_id": 1001,
+  "expected": [
+    {"type": "bug", "keywords": ["login", "email"]},
+    {"type": "task", "keywords": ["sqlite", "postgres"]},
+    {"type": "feature", "keywords": ["spinner", "upload"]},
+    {"type": "question", "keywords": ["upload", "limit"]}
+  ]
+}

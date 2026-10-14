@@ -1,0 +1,35 @@
+{
+  "_note": "Synthetic sample written by hand in the shape of `bee conversations get <id> --json`. It is NOT a real Bee recording. Use it to try the tool without a Bee device.",
+  "timezone": "Asia/Hong_Kong",
+  "conversation": {
+    "id": 1001,
+    "start_time": 1791800000000,
+    "end_time": 1791800300000,
+    "device_type": "bee",
+    "summary": "Developer thinks aloud while working on a small web app: a login validation bug, a database choice, an upload spinner and a lunch break.",
+    "short_summary": "Coding session: login bug, SQLite, spinner",
+    "state": "COMPLETED",
+    "transcriptions": [
+      {
+        "id": 1,
+        "realtime": false,
+        "utterances": [
+          {"id": 1, "realtime": false, "spoken_at": 1791800010000, "speaker": "speaker_1",
+           "text": "Okay, the login endpoint returns a 500 error when the email field is empty."},
+          {"id": 2, "realtime": false, "spoken_at": 1791800020000, "speaker": "speaker_1",
+           "text": "It should return a 400 with a clear message. I think we need input validation there."},
+          {"id": 3, "realtime": false, "spoken_at": 1791800040000, "speaker": "speaker_1",
+           "text": "Also, I decided to use SQLite instead of Postgres for now, because it's simpler for the demo."},
+          {"id": 4, "realtime": false, "spoken_at": 1791800050000, "speaker": "speaker_1",
+           "text": "We should write that down somewhere so we remember to migrate before launch."},
+          {"id": 5, "realtime": false, "spoken_at": 1791800070000, "speaker": "speaker_1",
+           "text": "TODO: add a loading spinner to the upload page, people keep clicking the button twice."},
+          {"id": 6, "realtime": false, "spoken_at": 1791800090000, "speaker": "speaker_1",
+           "text": "Hmm, and I'm not sure if the upload size limit should be five or ten megabytes. Need to ask."},
+          {"id": 7, "realtime": false, "spoken_at": 1791800120000, "speaker": "speaker_1",
+           "text": "Anyway, I'm getting hungry. Maybe noodles today."}
+        ]
+      }
+    ]
+  }
+}
