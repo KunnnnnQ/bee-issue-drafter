@@ -32,6 +32,11 @@ def get_repo(
     _check_args(repo, token)
     http = session or requests.Session()
     response = http.get(f"{API_ROOT}/repos/{repo}", headers=_headers(token), timeout=timeout)
+    if response.status_code == 404:
+        raise GitHubError(
+            f"Repository {repo} not found, or GITHUB_TOKEN has no access to it. For a fine-grained "
+            "token, add this repository under 'Repository access' and grant 'Issues: Read and write'."
+        )
     if response.status_code != 200:
         raise GitHubError(f"GitHub API error {response.status_code}: {response.text[:300]}")
     return response.json()
