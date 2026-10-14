@@ -24,6 +24,6 @@ def fixture_path():
 def clean_env(monkeypatch):
     for name in [
         "LLM_PROVIDER", "ANTHROPIC_API_KEY", "ANTHROPIC_MODEL", "AWS_REGION",
-        "BEDROCK_MODEL_ID", "GITHUB_TOKEN", "GITHUB_REPO", "BEE_BIN",
+        "BEDROCK_MODEL_ID", "DEEPSEEK_API_KEY", "DEEPSEEK_MODEL", "DEEPSEEK_BASE_URL", "GITHUB_TOKEN", "GITHUB_REPO", "BEE_BIN",
     ]:
         monkeypatch.delenv(name, raising=False)

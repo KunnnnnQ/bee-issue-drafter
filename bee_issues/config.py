@@ -16,7 +16,9 @@ except ImportError:  # pragma: no cover
 
 DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-5-5"
 DEFAULT_BEDROCK_MODEL_ID = "anthropic.claude-sonnet-5-5"
-SUPPORTED_PROVIDERS = ("anthropic", "bedrock")
+DEFAULT_DEEPSEEK_MODEL = "deepseek-chat"
+DEFAULT_DEEPSEEK_BASE_URL = "https://api.deepseek.com"
+SUPPORTED_PROVIDERS = ("anthropic", "bedrock", "deepseek")
 
 
 @dataclass
@@ -26,6 +28,9 @@ class Settings:
     anthropic_model: str = DEFAULT_ANTHROPIC_MODEL
     aws_region: str | None = None
     bedrock_model_id: str = DEFAULT_BEDROCK_MODEL_ID
+    deepseek_api_key: str | None = None
+    deepseek_model: str = DEFAULT_DEEPSEEK_MODEL
+    deepseek_base_url: str = DEFAULT_DEEPSEEK_BASE_URL
     github_token: str | None = None
     github_repo: str | None = None
     bee_bin: str | None = None
@@ -42,6 +47,8 @@ class Settings:
             "ANTHROPIC_MODEL": self.anthropic_model,
             "AWS_REGION": self.aws_region or "(not set)",
             "BEDROCK_MODEL_ID": self.bedrock_model_id,
+            "DEEPSEEK_API_KEY": mark(self.deepseek_api_key),
+            "DEEPSEEK_MODEL": self.deepseek_model,
             "GITHUB_TOKEN": mark(self.github_token),
             "GITHUB_REPO": self.github_repo or "MISSING",
             "BEE_BIN": self.bee_bin or "(auto: find `bee` on PATH)",
@@ -62,6 +69,9 @@ def load_settings(env_file: str | os.PathLike | None = ".env") -> Settings:
         anthropic_model=_get("ANTHROPIC_MODEL", DEFAULT_ANTHROPIC_MODEL),
         aws_region=_get("AWS_REGION"),
         bedrock_model_id=_get("BEDROCK_MODEL_ID", DEFAULT_BEDROCK_MODEL_ID),
+        deepseek_api_key=_get("DEEPSEEK_API_KEY"),
+        deepseek_model=_get("DEEPSEEK_MODEL", DEFAULT_DEEPSEEK_MODEL),
+        deepseek_base_url=_get("DEEPSEEK_BASE_URL", DEFAULT_DEEPSEEK_BASE_URL),
         github_token=_get("GITHUB_TOKEN"),
         github_repo=_get("GITHUB_REPO"),
         bee_bin=_get("BEE_BIN"),

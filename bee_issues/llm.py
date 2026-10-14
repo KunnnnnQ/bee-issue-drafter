@@ -1,4 +1,4 @@
-"""Minimal LLM client: Anthropic Claude API (default) or Claude on Amazon Bedrock."""
+"""Minimal LLM client: Anthropic Claude API (default), Claude on Amazon Bedrock, or DeepSeek."""
 from __future__ import annotations
 
 import requests
@@ -16,6 +16,8 @@ class LLMError(RuntimeError):
 def model_name(settings: Settings) -> str:
     if settings.llm_provider == "bedrock":
         return settings.bedrock_model_id
+    if settings.llm_provider == "deepseek":
+        return settings.deepseek_model
     return settings.anthropic_model
 
 
@@ -25,6 +27,8 @@ def complete(system: str, user: str, settings: Settings, timeout: int = 120) -> 
         return _anthropic(system, user, settings, timeout)
     if settings.llm_provider == "bedrock":
         return _bedrock(system, user, settings)
+    if settings.llm_provider == "deepseek":
+        return _deepseek(system, user, settings, timeout)
     raise LLMError(
         f"Unknown LLM_PROVIDER {settings.llm_provider!r}; use one of {SUPPORTED_PROVIDERS}."
     )
@@ -52,6 +56,35 @@ def _anthropic(system: str, user: str, settings: Settings, timeout: int) -> str:
         raise LLMError(f"Anthropic API error {response.status_code}: {response.text[:300]}")
     blocks = response.json().get("content") or []
     return "".join(b.get("text", "") for b in blocks if b.get("type") == "text")
+
+
+def _deepseek(system: str, user: str, settings: Settings, timeout: int) -> str:
+    """DeepSeek's OpenAI-compatible chat completions API, in JSON mode."""
+    if not settings.deepseek_api_key:
+        raise LLMError("DEEPSEEK_API_KEY is not set. Add it to your .env file.")
+    response = requests.post(
+        f"{settings.deepseek_base_url.rstrip('/')}/chat/completions",
+        headers={
+            "Authorization": f"Bearer {settings.deepseek_api_key}",
+            "Content-Type": "application/json",
+        },
+        json={
+            "model": settings.deepseek_model,
+            "max_tokens": MAX_OUTPUT_TOKENS,
+            "response_format": {"type": "json_object"},
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+        },
+        timeout=timeout,
+    )
+    if response.status_code != 200:
+        raise LLMError(f"DeepSeek API error {response.status_code}: {response.text[:300]}")
+    choices = response.json().get("choices") or []
+    if not choices:
+        raise LLMError("DeepSeek API returned no choices.")
+    return choices[0].get("message", {}).get("content") or ""
 
 
 def _bedrock(system: str, user: str, settings: Settings) -> str:

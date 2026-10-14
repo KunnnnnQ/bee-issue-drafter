@@ -48,7 +48,8 @@ Design choices:
 - Node.js (for the Bee CLI)
 - A Bee account with Developer Mode unlocked in the Bee iOS app
   (see the [Bee developer docs](https://docs.bee.computer/docs))
-- One LLM option: a Claude API key, **or** AWS credentials with access to Claude on Amazon Bedrock
+- One LLM option: a Claude API key, AWS credentials with access to Claude on Amazon Bedrock,
+  **or** a DeepSeek API key
 - For publishing: a GitHub fine-grained personal access token
 
 ## Setup (Windows PowerShell)
@@ -77,11 +78,12 @@ macOS / Linux: use `python3 -m venv .venv`, `source .venv/bin/activate` and `cp 
 
 | Variable | Needed for | Description |
 | --- | --- | --- |
-| `LLM_PROVIDER` | `draft` | `anthropic` (default) or `bedrock` |
+| `LLM_PROVIDER` | `draft` | `anthropic` (default), `bedrock` or `deepseek` |
 | `ANTHROPIC_API_KEY` | `draft` with `anthropic` | Claude API key |
 | `ANTHROPIC_MODEL` | `draft` with `anthropic` | Default `claude-sonnet-5-5` |
 | `AWS_REGION`, `BEDROCK_MODEL_ID` | `draft` with `bedrock` | Region and model id. Check the exact id (or inference profile id) in your Bedrock console |
 | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | `draft` with `bedrock` | Optional if you already ran `aws configure` |
+| `DEEPSEEK_API_KEY`, `DEEPSEEK_MODEL` | `draft` with `deepseek` | DeepSeek API key; model defaults to `deepseek-chat` |
 | `GITHUB_TOKEN` | `publish` | Fine-grained token with **Issues: Read and write** on the target repo |
 | `GITHUB_REPO` | `publish` | Target repository as `owner/name` |
 | `BEE_BIN` | optional | Full path to `bee` if it is not on `PATH` |
