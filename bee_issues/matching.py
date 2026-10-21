@@ -14,9 +14,10 @@ def normalize(text: str) -> str:
 STOPWORDS = {
     "a", "an", "the", "to", "of", "for", "in", "on", "at", "and", "or", "is", "be", "must",
     "should", "whether", "when", "while", "with", "it", "we", "if", "after", "before",
-    "every", "time", "from", "by",
+    "every", "time", "from", "by", "vs", "versus", "not", "just", "as", "well",
     # Leading verbs differ between drafts of the same item ("Fix X" / "X resets").
-    "fix", "add", "decide", "show", "create", "implement", "make", "update",
+    "fix", "add", "decide", "show", "create", "implement", "make", "update", "confirm",
+    "clarify", "determine", "investigate", "consider", "check", "ensure",
 }
 
 
@@ -39,13 +40,18 @@ def similarity(a: str, b: str) -> float:
 
     The higher of character similarity and keyword overlap, so a reworded title
     ("Decide whether IE must be supported" / "Decide whether to support IE") still matches.
+    Keyword overlap averages Jaccard with containment, so extra detail in one title
+    ("... with backend team") lowers the score less than a different subject does.
     """
     a, b = normalize(a), normalize(b)
     if not a or not b:
         return 0.0
     chars = SequenceMatcher(None, a, b).ratio()
     ka, kb = _keywords(a), _keywords(b)
-    words = len(ka & kb) / len(ka | kb) if ka and kb else 0.0
+    if not ka or not kb:
+        return chars
+    shared = len(ka & kb)
+    words = (shared / len(ka | kb) + shared / min(len(ka), len(kb))) / 2
     return max(chars, words)
 
 

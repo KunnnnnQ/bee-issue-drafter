@@ -19,6 +19,11 @@ def test_similarity_catches_reworded_titles_but_not_related_ones():
         "Dark mode toggle resets after refreshing settings page",
         "Fix dark mode toggle resetting on settings page refresh",
     ) >= 0.75
+    # Also seen live (issues #11 and #13): one draft adds detail.
+    assert similarity(
+        "Decide search-results cache TTL: 5 or 15 minutes",
+        "Confirm search results cache TTL (5 vs 15 minutes) with backend team",
+    ) >= 0.75
     assert similarity("Add CSV export", "Fix CSV export crash on large reports") < 0.75
     assert similarity("Add keyboard shortcut to submit the form", "Fix form submit error") < 0.75
 
