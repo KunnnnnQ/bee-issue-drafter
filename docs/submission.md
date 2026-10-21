@@ -2,9 +2,21 @@
 
 > Copy into the Devpost form. Lines marked **TODO** need your input before submitting.
 
-**Track:** Bee (Wearable AI)
-**Mini challenge:** Open Source (public repository, MIT license, created during the hackathon).
-TODO: add AWS Builder only if you switch `LLM_PROVIDER` to `bedrock` and describe it.
+**Track:** Bee (Wearable AI), priority use case: developer experience / personal productivity.
+Fits the judging examples "ambient context capture that informs a productivity workflow".
+
+**Mini challenge:** Open Source. Required fields:
+- Contribution URL: https://github.com/KunnnnnQ/bee-issue-drafter (TODO: or a bee-cli PR, see below)
+- Project repository URL: https://github.com/KunnnnnQ/bee-issue-drafter
+- GitHub username: KunnnnnQ
+- What / how / why: new MIT-licensed tool created during the hackathon; Bee CLI → LLM with
+  grounded evidence → duplicate-checked GitHub issues; evaluation command and tests so other
+  developers can extend it safely.
+
+**New & existing:** The project was created during the Submission Period (first commit 2026-10-14).
+
+**Bee runtime requirement:** `bee_issues/bee_client.py` runs the Bee CLI at runtime
+(`bee conversations list/get --json`); the demo uses a real recording from a Bee device.
 
 ## Inspiration
 

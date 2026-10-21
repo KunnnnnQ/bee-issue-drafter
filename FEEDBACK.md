@@ -1,49 +1,57 @@
 # Product feedback
 
-Feedback on the tools used to build bee-issue-drafter, for the
-*Build, Ship, Shape: Amazon Developer Hackathon* submission.
+Answers to the hackathon's product feedback questions, one section per tool.
 
-> Lines marked **TODO** still need to be written from first-hand experience before submitting.
+> Lines marked **TODO** still need first-hand answers before submitting.
 
-## Bee CLI (`@beeai/cli`, tested with 0.7.3 on Windows 11)
+## Bee CLI (`@beeai/cli` 0.7.3, Windows 11)
 
-**What I used it for.** Listing conversations (`bee conversations list --json`) and fetching a
-full conversation with its transcript (`bee conversations get <id> --json`). The tool calls the
-CLI as a subprocess and parses the JSON.
+**Which tools did you use and for what?**
+`bee conversations list --json` to find recordings and `bee conversations get ID --json` to
+fetch the transcript. The tool runs the CLI as a subprocess and parses the JSON.
 
-**What worked well.**
+**What worked well?**
 - `--json` output is easy to consume from another program; no scraping of human-readable text.
-- Installing through npm puts a `bee.cmd` shim on `PATH`, and Python's `shutil.which("bee")`
-  finds it on Windows, so the same subprocess code works on Windows and macOS/Linux.
-- Bee's own conversation summaries already include an "Action Items" section. That made it clear
-  that this project has to go further: technical classification, issue formatting, evidence
-  quotes and duplicate checks.
+- `npm install -g` puts a `bee.cmd` shim on `PATH` that Python's `shutil.which("bee")` finds,
+  so the same subprocess code works on Windows and macOS/Linux.
+- Utterances carry speaker labels and timestamps, which made evidence quotes possible.
 
-**Problems / suggestions.**
-- Docs use `<id>` placeholders. In PowerShell `<` is a reserved operator, so copying the example
-  literally gives a parser error instead of a helpful message. Using `ID` or `12345` in examples
-  would avoid this.
-- `bee now` only covers roughly the last 10 hours; when it returns nothing it is not obvious
-  whether that means "no recordings" or "not logged in". A one-line hint would help.
-- The JSON shape of `conversations get` is not documented as a schema; I read the CLI source to
-  find `transcriptions[].utterances[]` and the `realtime` flag. A published schema would help.
-- TODO: anything about Developer Mode unlock, `bee login`, sync delay after recording.
+**What needs work?**
+- No documented JSON schema for `--json` responses (see FRICTION_LOG.md #3).
+- `<id>` placeholders in docs break when pasted into PowerShell (#1).
+- `bee now` prints nothing when there is no data (#2).
+- TODO: anything else you hit.
 
-**Would I use it again?** TODO
+**Onboarding (zero to hello world)?** TODO: Developer Mode unlock, `bee login`, time to the
+first `bee conversations list`.
 
-## Claude API (Anthropic) / Claude on Amazon Bedrock
+**Would you build with it again?** TODO: Yes/No and why.
 
-**What I used it for.** Turning a labelled transcript into structured issue drafts (JSON).
+## DeepSeek API
 
-- TODO: which provider and model you actually used, latency, cost, JSON reliability.
+**What for?** Turning a labelled transcript into structured issue drafts (JSON mode).
+
+**What worked well?** JSON mode (`response_format: json_object`) returned parseable output on
+every run so far; the 4 synthetic evaluation conversations scored precision 1.00 / recall 1.00.
+
+**What needs work?** One transient network failure during evaluation; the tool now retries
+network errors, 429 and 5xx responses. TODO: latency / cost observations.
+
+**Would you use it again?** TODO
 
 ## GitHub REST API
 
-**What I used it for.** Creating issues and listing existing issues for duplicate detection,
-with a fine-grained personal access token limited to "Issues: Read and write" on one repository.
+**What for?** Creating issues, and listing existing issues for duplicate detection, using a
+fine-grained token limited to "Issues: Read and write" on one repository.
 
-- TODO: setup experience.
+**What needs work?** A token without access to a repository gets 404 instead of 403, which looks
+like a typo in the repository name. The tool now explains this in its error message.
 
-## AWS services
+## Feature requests (optional)
 
-TODO: only if Bedrock or another AWS service was used. Otherwise delete this section.
+| Request | Why it matters | Priority |
+| --- | --- | --- |
+| JSON schema for every `bee ... --json` response | Integrations break silently when fields change | Important |
+| Webhook or `bee conversations watch` for new conversations | Real-time workflows without polling | Important |
+| Action items as structured JSON fields | Tools could build on Bee's own extraction | Nice-to-have |
+| `--output FILE` (UTF-8) option | Avoids Windows PowerShell encoding pitfalls | Nice-to-have |

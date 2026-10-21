@@ -1,16 +1,61 @@
 # Friction log
 
 Moments where building with Bee slowed me down, in the order they happened.
-Format: what I tried → what happened → what I expected → suggestion.
+Each entry uses the fields requested by the hackathon: task, steps, expected vs. actual,
+severity, workaround and suggestion.
 
-> Add an entry every time something blocks you for more than a few minutes. Entries marked
-> **TODO** are placeholders.
+> Entries marked **TODO** still need first-hand details before submitting.
 
-| # | Date | Area | What happened | Expected | Suggestion |
-| --- | --- | --- | --- | --- | --- |
-| 1 | 2026-10 | Bee CLI docs | Copied `bee conversations get <id> --json` into PowerShell; got a parser error because `<` is reserved. | Example runs after replacing the id. | Use `12345` or `ID` in examples instead of `<id>`. |
-| 2 | 2026-10 | Bee CLI | `bee now` printed nothing. Had to work out that it only covers about the last 10 hours. | A message such as "no conversations in the last 10 hours". | Print an explicit empty-state message. |
-| 3 | TODO verify | Windows | Saving CLI output with `>` in Windows PowerShell 5.1 writes UTF-16, which then fails to parse as UTF-8 JSON in Python. Workaround: `Out-File -Encoding utf8`. | Plain UTF-8 file. | Mention the encoding in the docs, or add an `--output FILE` option to the CLI. |
-| 4 | 2026-10 | Bee data | Bee summaries already contain "Action Items", so a naive "extract todos" tool would add nothing. | — | (Design note, not a bug.) |
-| 5 | TODO | Developer Mode / login | TODO | | |
-| 6 | TODO | Sync delay | TODO: how long between finishing a recording and it appearing in `bee conversations list`? | | |
+## 1. Fetching one conversation from PowerShell
+
+- **Task:** Export one conversation as JSON on Windows.
+- **Steps:** Copied `bee conversations get <id> --json` from the docs into PowerShell and replaced nothing.
+- **Expected:** A hint that `<id>` must be replaced. **Actual:** PowerShell parser error, because `<` is a reserved operator.
+- **Severity:** Low
+- **Workaround:** Type the numeric id without angle brackets.
+- **Suggestion:** Use a concrete example such as `bee conversations get 12345 --json` in the docs.
+
+## 2. Empty output from `bee now`
+
+- **Task:** Check that recent recordings are available.
+- **Steps:** Ran `bee now` after a period without recording.
+- **Expected:** A message such as "no conversations in the last 10 hours". **Actual:** No output at all, so it was unclear whether I was logged out or simply had no data.
+- **Severity:** Low
+- **Workaround:** Used `bee conversations list --limit 3` instead.
+- **Suggestion:** Print an explicit empty-state message.
+
+## 3. Finding the JSON shape of a conversation
+
+- **Task:** Parse `bee conversations get --json` in Python.
+- **Steps:** Looked for a schema in the docs; ended up reading the bee-cli source to find `transcriptions[].utterances[]` and the `realtime` flag.
+- **Expected:** A documented response schema. **Actual:** Shape only discoverable from source or by inspecting output.
+- **Severity:** Medium
+- **Workaround:** Read `sources/resources/conversations` in the bee-cli repository.
+- **Suggestion:** Publish a JSON schema or a typed example response for each `--json` command.
+
+## 4. Bee summaries already contain action items
+
+- **Task:** Decide what the project adds beyond Bee itself.
+- **Steps:** Read the summaries of my own conversations.
+- **Expected / Actual:** Bee already lists "Action Items", so a plain to-do extractor would add nothing.
+- **Severity:** Design note
+- **Workaround:** Focused on what Bee does not do: technical classification, issue format, evidence quotes, duplicate checks against an existing repository.
+- **Suggestion:** Expose action items as structured fields in `--json` so tools can build on them directly.
+
+## 5. TODO: Developer Mode / `bee login`
+
+- **Task:** Get from zero to the first `bee conversations list`.
+- **Steps:** TODO
+- **Expected / Actual:** TODO
+- **Severity:** TODO
+- **Workaround:** TODO
+- **Suggestion:** TODO
+
+## 6. TODO: Sync delay after recording
+
+- **Task:** Draft issues right after a recording.
+- **Steps:** Recorded, then ran `bee conversations list`.
+- **Expected / Actual:** TODO: how many minutes until the conversation and its transcript appeared?
+- **Severity:** TODO
+- **Workaround:** TODO
+- **Suggestion:** TODO
