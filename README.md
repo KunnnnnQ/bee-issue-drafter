@@ -112,6 +112,7 @@ python -m bee_issues list --limit 10       # recent Bee conversations
 python -m bee_issues transcript 12345      # transcript with the U1, U2, ... labels
 python -m bee_issues draft 12345           # draft issues from conversation 12345
 python -m bee_issues draft --latest        # ... or from the newest conversation
+python -m bee_issues watch                 # keep running: draft each new finished conversation
 python -m bee_issues publish drafts\conversation-12345.json --dry-run
 python -m bee_issues publish drafts\conversation-12345.json            # asks y/N per issue
 python -m bee_issues publish drafts\conversation-12345.json --only 1,3

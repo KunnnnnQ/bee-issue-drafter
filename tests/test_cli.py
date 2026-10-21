@@ -134,3 +134,36 @@ def test_eval_reports_precision_and_recall(tmp_path, fixture_path, monkeypatch, 
     printed = capsys.readouterr().out
     assert "MISSED keywords: csv, export" in printed
     assert "precision 1.00  recall 0.50" in printed
+
+
+def test_watch_skips_existing_then_drafts_new_completed(tmp_path, fixture_path, monkeypatch, capsys):
+    from bee_issues import bee_client
+
+    conversation = bee_client.parse_conversation(json.loads(fixture_path.read_text(encoding="utf-8")))
+    recent = [{"id": 1, "state": "COMPLETED", "start_time": 1}]
+    fetched = []
+
+    def fake_get(conversation_id, bee_bin=None):
+        fetched.append(conversation_id)
+        return conversation
+
+    monkeypatch.setattr(bee_client, "list_conversations", lambda limit, bee_bin=None: list(recent))
+    monkeypatch.setattr(bee_client, "get_conversation", fake_get)
+    monkeypatch.setattr(llm, "complete", lambda system, user, settings: LLM_REPLY)
+    watch = ["--env-file", "none", "watch", "--once", "--out-dir", str(tmp_path)]
+
+    assert cli.main(watch) == 0  # first run: existing conversation 1 is skipped
+    assert fetched == [] and "Skipping 1 existing" in capsys.readouterr().out
+
+    recent.append({"id": 4242, "state": "CAPTURING", "start_time": 2})
+    assert cli.main(watch) == 0  # not finished yet
+    assert fetched == []
+
+    recent[-1]["state"] = "COMPLETED"
+    assert cli.main(watch) == 0
+    assert fetched == [4242]
+    assert (tmp_path / "conversation-4242.json").exists()
+    assert "Fix login timeout" in capsys.readouterr().out
+
+    assert cli.main(watch) == 0  # already handled
+    assert fetched == [4242]

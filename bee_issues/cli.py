@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -45,6 +46,14 @@ def build_parser() -> argparse.ArgumentParser:
     p_draft = sub.add_parser("draft", help="draft GitHub issues from one Bee conversation")
     add_source(p_draft)
     p_draft.add_argument("--out-dir", default="drafts", help="where to save drafts (default: drafts)")
+
+    p_watch = sub.add_parser(
+        "watch", help="keep checking Bee and draft issues for each new finished conversation"
+    )
+    p_watch.add_argument("--interval", type=int, default=60, help="seconds between checks (default: 60)")
+    p_watch.add_argument("--limit", type=int, default=10, help="recent conversations to check (default: 10)")
+    p_watch.add_argument("--out-dir", default="drafts", help="where to save drafts (default: drafts)")
+    p_watch.add_argument("--once", action="store_true", help="check once and exit")
 
     p_pub = sub.add_parser("publish", help="create GitHub issues from a drafts file")
     p_pub.add_argument("drafts_file")
@@ -122,9 +131,9 @@ def cmd_transcript(args: argparse.Namespace, settings: Settings) -> int:
     return 0
 
 
-def cmd_draft(args: argparse.Namespace, settings: Settings) -> int:
-    conversation = _load_conversation(args, settings)
-    print(f"Conversation #{conversation.id}: {len(conversation.utterances)} utterances")
+def _draft_and_save(
+    conversation: Conversation, settings: Settings, out_dir: str
+) -> tuple[Path, list[dict], list[str]]:
     drafts, warnings = extract_drafts(
         conversation, lambda system, user: llm.complete(system, user, settings)
     )
@@ -136,9 +145,9 @@ def cmd_draft(args: argparse.Namespace, settings: Settings) -> int:
         item["published_url"] = None
         issues.append(item)
 
-    out_dir = Path(args.out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_file = out_dir / f"conversation-{conversation.id}.json"
+    out_path = Path(out_dir)
+    out_path.mkdir(parents=True, exist_ok=True)
+    out_file = out_path / f"conversation-{conversation.id}.json"
     record = {
         "tool": f"bee-issue-drafter {__version__}",
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -152,7 +161,13 @@ def cmd_draft(args: argparse.Namespace, settings: Settings) -> int:
         "issues": issues,
     }
     out_file.write_text(json.dumps(record, ensure_ascii=False, indent=2), encoding="utf-8")
+    return out_file, issues, warnings
 
+
+def cmd_draft(args: argparse.Namespace, settings: Settings) -> int:
+    conversation = _load_conversation(args, settings)
+    print(f"Conversation #{conversation.id}: {len(conversation.utterances)} utterances")
+    out_file, issues, warnings = _draft_and_save(conversation, settings, args.out_dir)
     for warning in warnings:
         print(f"WARNING: {warning}")
     if not issues:
@@ -167,6 +182,66 @@ def cmd_draft(args: argparse.Namespace, settings: Settings) -> int:
     if issues:
         print(f"Review or edit that file, then run: python -m bee_issues publish {out_file}")
     return 0
+
+
+def _load_seen(path: Path) -> set[int] | None:
+    if not path.exists():
+        return None
+    return {int(x) for x in json.loads(path.read_text(encoding="utf-8")).get("seen", [])}
+
+
+def _save_seen(path: Path, seen: set[int]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"seen": sorted(seen)}), encoding="utf-8")
+
+
+def _watch_once(args: argparse.Namespace, settings: Settings, state_file: Path) -> None:
+    recent = bee_client.list_conversations(limit=args.limit, bee_bin=settings.bee_bin)
+    seen = _load_seen(state_file)
+    if seen is None:
+        # First run: only conversations recorded from now on are drafted.
+        seen = {int(c["id"]) for c in recent}
+        _save_seen(state_file, seen)
+        print(f"Watching Bee. Skipping {len(seen)} existing conversation(s); new ones will be drafted.")
+        return
+    for conv in sorted(recent, key=lambda c: c.get("start_time") or 0):
+        conversation_id = int(conv["id"])
+        if conversation_id in seen or conv.get("state") != "COMPLETED":
+            continue  # still being captured or processed by Bee; check again next time
+        conversation = bee_client.get_conversation(conversation_id, bee_bin=settings.bee_bin)
+        if not conversation.utterances:
+            continue  # transcript not synced yet
+        stamp = datetime.now().strftime("%H:%M:%S")
+        print(f"\n[{stamp}] New conversation #{conversation_id} ({len(conversation.utterances)} utterances)")
+        out_file, issues, warnings = _draft_and_save(conversation, settings, args.out_dir)
+        for warning in warnings:
+            print(f"  WARNING: {warning}")
+        for number, item in enumerate(issues, start=1):
+            print(f"  [{number}] ({item['type']}) {item['title']}")
+        if issues:
+            print(f"  Review, then run: python -m bee_issues publish {out_file}")
+        else:
+            print("  No actionable technical items.")
+        seen.add(conversation_id)
+        _save_seen(state_file, seen)
+
+
+def cmd_watch(args: argparse.Namespace, settings: Settings) -> int:
+    state_file = Path(args.out_dir) / ".watch-state.json"
+    try:
+        while True:
+            try:
+                _watch_once(args, settings, state_file)
+            except (BeeCliError, LLMError, ExtractionError) as exc:
+                if args.once:
+                    raise
+                print(f"Error (will retry): {exc}", file=sys.stderr)
+            if args.once:
+                return 0
+            time.sleep(args.interval)
+    except KeyboardInterrupt:
+        print("\nStopped.")
+        return 0
 
 
 def _parse_only(value: str | None, total: int) -> list[int]:
@@ -291,6 +366,8 @@ def main(argv: list[str] | None = None) -> int:
             return cmd_transcript(args, settings)
         if args.command == "draft":
             return cmd_draft(args, settings)
+        if args.command == "watch":
+            return cmd_watch(args, settings)
         if args.command == "publish":
             return cmd_publish(args, settings)
         if args.command == "eval":
