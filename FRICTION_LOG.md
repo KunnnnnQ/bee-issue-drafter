@@ -44,14 +44,12 @@ severity, workaround and suggestion.
 - **Workaround:** Focused on what Bee does not do: technical classification, issue format, evidence quotes, duplicate checks against an existing repository.
 - **Suggestion:** Expose action items as structured fields in `--json` so tools can build on them directly.
 
-## 5. TODO: Developer Mode / `bee login`
+## 5. Developer Mode / `bee login` (no friction)
 
 - **Task:** Get from zero to the first `bee conversations list`.
-- **Steps:** TODO
-- **Expected / Actual:** TODO
-- **Severity:** TODO
-- **Workaround:** TODO
-- **Suggestion:** TODO
+- **Steps:** Unlocked Developer Mode in the Bee app, installed the CLI with npm, ran `bee login`.
+- **Expected / Actual:** Worked as expected; the whole flow felt smooth.
+- **Severity:** None. Recorded here as a positive data point.
 
 ## 6. Recording boundaries: one sentence moved, a short recording vanished
 
@@ -63,6 +61,40 @@ severity, workaround and suggestion.
   its transcript. The third showed up as `CAPTURING` (id 11476962), and some minutes later it was
   gone from the list; `bee conversations get 11476962` returned "Conversation not found".
 - **Severity:** Medium (silent data loss from the developer's point of view)
-- **Workaround:** Re-record with longer speech. TODO: note the result.
+- **Workaround:** Re-recorded with about a minute of speech (read twice); it became one
+  conversation (id 11477324) and was `COMPLETED` about 6 minutes after recording started. In
+  normal use, recordings also sometimes ended on their own before I had finished.
 - **Suggestion:** Document the minimum length / discard rules, and expose a `DISCARDED` state
   (or an event in `bee changed` / `bee stream`) instead of the conversation disappearing.
+
+## 7. Mixed-language app interface
+
+- **Task:** Use the Bee app with the interface set to Chinese.
+- **Steps:** Browsed conversations, summaries and suggestions in the app.
+- **Expected:** One consistent language. **Actual:** The interface switches between Chinese and English.
+- **Severity:** Medium (affects every screen)
+- **Workaround:** None.
+- **Suggestion:** Localise fully, or fall back to all-English rather than mixing per string.
+
+## 8. Suggested to-dos point to Google Calendar and Gmail
+
+- **Task:** Review the to-dos Bee suggested after everyday conversations.
+- **Steps:** Opened the suggested to-do list in the app.
+- **Expected:** A few relevant suggestions. **Actual:** A cluttered list where most items link
+  to Google Calendar or Gmail, even when the source was a minor remark in casual chat.
+- **Severity:** Medium
+- **Workaround:** Ignored the list.
+- **Suggestion:** Let users choose which integrations to use from one page, and raise the bar
+  for turning casual remarks into suggestions.
+
+## 9. Sharing a meeting means removing my private life first
+
+- **Task:** Share what was said in a meeting with someone else.
+- **Steps:** Looked at what the recordings and summaries contained.
+- **Expected:** Share only the meeting. **Actual:** Personal fragments of my day are mixed in,
+  and I cannot predict how collected data will be organised later, so I would have to remove
+  them myself before sharing.
+- **Severity:** High for everyday use (main reason I would not wear it all day)
+- **Workaround:** Only record deliberately, for work.
+- **Suggestion:** Per-conversation sharing with redaction, and a clear view of what is
+  captured and how it will be used.
