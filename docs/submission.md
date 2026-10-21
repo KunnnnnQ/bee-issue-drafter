@@ -52,24 +52,42 @@ technical parts only:
 - **Evaluation:** an `eval` command scores drafts against hand-written expected issues
   (precision, recall, type accuracy), including hard synthetic cases such as speech recognition
   errors, pure chit-chat and repeated mentions.
-- 30+ unit tests that make no network calls; CI on Windows and Ubuntu.
+- **`watch` mode** drafts issues automatically for each new finished Bee conversation.
+- 36 unit tests that make no network calls; CI on Windows and Ubuntu.
 
 ## Challenges
 
-TODO: from your own experience. Candidates: Windows specifics (PowerShell `<id>` and encoding),
-understanding the Bee JSON shape, keeping personal recordings out of a public repository.
+- **Unpredictable recording boundaries.** One sentence landed outside its conversation, and a
+  30-second recording showed up as `CAPTURING` and then disappeared. Longer recordings worked.
+  This also exposed a bug in my own `watch` mode (started mid-recording, it skipped that
+  recording), which I fixed with a test.
+- **Privacy.** Bee records everything, including other people and my private life. The
+  repository only contains synthetic data; real transcripts stay in git-ignored folders, and the
+  tool only processes conversations the user picks.
+- **The Bee JSON shape is undocumented**, so I read the bee-cli source to parse transcripts.
 
 ## Accomplishments
 
-TODO: your results on real Bee recordings (precision / recall from `eval`).
+- End-to-end on a real Bee device: on three scripted recordings, every technical item in the
+  transcripts was found (10 of 10) with no extra issues; chit-chat, remarks about the recording
+  and already-finished work were ignored.
+- The first real run produced one false positive ("quick test for the demo" became a task).
+  The `eval` command caught it, a one-line prompt rule fixed it, and the synthetic set confirmed
+  nothing else got worse.
+- Contributed back to Bee: https://github.com/bee-computer/bee-cli/pull/27 (`bee now --hours`).
 
 ## What we learned
 
-TODO
+- Bee's own summaries already list action items, so the value is in what comes after:
+  structure, evidence, and fitting into the developer's existing tracker without duplicates.
+- With speech input, measuring beats guessing: small hand-written expected lists were enough to
+  find and fix a real prompt problem.
+- For an always-on wearable, user control over what is captured and shared matters as much as
+  the AI features.
 
 ## What's next
 
-- Run continuously: watch for new Bee conversations and draft automatically.
+- Use `bee stream` instead of polling so drafts appear as soon as a conversation ends.
 - Route issues to the right repository when one person works on several projects.
 - Assign issues based on who spoke (speaker identification).
 
