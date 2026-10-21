@@ -180,8 +180,10 @@ and fake LLM / GitHub clients. They make no network calls.
 
 ## Project status
 
-Early MVP. Covered by unit tests with synthetic data; not yet run end-to-end against live
-Bee data. `--input-json` is for offline development and for trying the tool without a device.
+Early MVP, tested end-to-end with a Bee device. On two scripted real recordings
+(2026-10-21, `deepseek-chat`) it found every technical item present in the transcripts
+(6 of 6) and created no extra issues; off-topic lines and already-finished work were ignored.
+`--input-json` is for offline development and for trying the tool without a device.
 
 Product feedback and a friction log for the hackathon are in [FEEDBACK.md](FEEDBACK.md) and
 [FRICTION_LOG.md](FRICTION_LOG.md).

@@ -15,14 +15,16 @@ severity, workaround and suggestion.
 - **Workaround:** Type the numeric id without angle brackets.
 - **Suggestion:** Use a concrete example such as `bee conversations get 12345 --json` in the docs.
 
-## 2. Empty output from `bee now`
+## 2. `bee now` has a fixed, unstated time window
 
 - **Task:** Check that recent recordings are available.
 - **Steps:** Ran `bee now` after a period without recording.
-- **Expected:** A message such as "no conversations in the last 10 hours". **Actual:** No output at all, so it was unclear whether I was logged out or simply had no data.
+- **Expected:** To see my latest recordings, or be told which time range was searched. **Actual:** Only "- (none)"; the 10-hour window is hard-coded and only mentioned in the README.
 - **Severity:** Low
 - **Workaround:** Used `bee conversations list --limit 3` instead.
-- **Suggestion:** Print an explicit empty-state message.
+- **Suggestion / contribution:** I opened a change that adds `bee now --hours N` and prints
+  "(none in the last N hours)", with tests:
+  https://github.com/KunnnnnQ/bee-cli/tree/feat/now-hours-window
 
 ## 3. Finding the JSON shape of a conversation
 
@@ -51,11 +53,16 @@ severity, workaround and suggestion.
 - **Workaround:** TODO
 - **Suggestion:** TODO
 
-## 6. TODO: Sync delay after recording
+## 6. Recording boundaries: one sentence moved, a short recording vanished
 
-- **Task:** Draft issues right after a recording.
-- **Steps:** Recorded, then ran `bee conversations list`.
-- **Expected / Actual:** TODO: how many minutes until the conversation and its transcript appeared?
-- **Severity:** TODO
-- **Workaround:** TODO
-- **Suggestion:** TODO
+- **Task:** Record three short scripted notes (about 1 min, 1 min and 30 s) a couple of minutes apart.
+- **Steps:** Recorded on 2026-10-21 around 10:14, 10:16 and 10:18, then polled
+  `bee conversations list`.
+- **Expected:** Three conversations. **Actual:** The first two appeared as `COMPLETED` within a
+  few minutes and were correct, except that the last sentence of the second recording was not in
+  its transcript. The third showed up as `CAPTURING` (id 11476962), and some minutes later it was
+  gone from the list; `bee conversations get 11476962` returned "Conversation not found".
+- **Severity:** Medium (silent data loss from the developer's point of view)
+- **Workaround:** Re-record with longer speech. TODO: note the result.
+- **Suggestion:** Document the minimum length / discard rules, and expose a `DISCARDED` state
+  (or an event in `bee changed` / `bee stream`) instead of the conversation disappearing.
