@@ -53,7 +53,7 @@ technical parts only:
   (precision, recall, type accuracy), including hard synthetic cases such as speech recognition
   errors, pure chit-chat and repeated mentions.
 - **`watch` mode** drafts issues automatically for each new finished Bee conversation.
-- 36 unit tests that make no network calls; CI on Windows and Ubuntu.
+- 38 unit tests that make no network calls; CI on Windows and Ubuntu.
 
 ## Challenges
 
@@ -61,6 +61,11 @@ technical parts only:
   30-second recording showed up as `CAPTURING` and then disappeared. Longer recordings worked.
   This also exposed a bug in my own `watch` mode (started mid-recording, it skipped that
   recording), which I fixed with a test.
+- **Duplicate detection on reworded titles.** While recording the demo, the same recording
+  drafted twice produced differently worded titles and the check let one through (#12, #13 in
+  the test repo, now closed). I blended keyword overlap and containment with character
+  similarity, then verified it on 15 re-drafted titles (all caught) and every pair among 60
+  titles (no different items merged).
 - **Privacy.** Bee records everything, including other people and my private life. The
   repository only contains synthetic data; real transcripts stay in git-ignored folders, and the
   tool only processes conversations the user picks.
