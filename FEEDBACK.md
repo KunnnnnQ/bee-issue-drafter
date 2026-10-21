@@ -52,9 +52,9 @@ until users get clearer control over what is captured, how it is processed and w
 every run so far; the 4 synthetic evaluation conversations scored precision 1.00 / recall 1.00.
 
 **What needs work?** One transient network failure during evaluation; the tool now retries
-network errors, 429 and 5xx responses. TODO: latency / cost observations.
+network errors, 429 and 5xx responses.
 
-**Would you use it again?** TODO
+**Would you use it again?** Yes. It did what this project needed and I found no reason against it.
 
 ## GitHub REST API
 
