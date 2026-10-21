@@ -13,14 +13,20 @@ def normalize(text: str) -> str:
 
 STOPWORDS = {
     "a", "an", "the", "to", "of", "for", "in", "on", "at", "and", "or", "is", "be", "must",
-    "should", "whether", "when", "while", "with", "it", "we", "if",
+    "should", "whether", "when", "while", "with", "it", "we", "if", "after", "before",
+    "every", "time", "from", "by",
+    # Leading verbs differ between drafts of the same item ("Fix X" / "X resets").
+    "fix", "add", "decide", "show", "create", "implement", "make", "update",
 }
 
 
 def _stem(word: str) -> str:
     for suffix in ("ing", "ed", "es", "s"):
         if len(word) > len(suffix) + 3 and word.endswith(suffix):
-            return word[: -len(suffix)]
+            word = word[: -len(suffix)]
+            if len(word) > 3 and word[-1] == word[-2]:
+                word = word[:-1]  # resetting -> resett -> reset
+            return word
     return word
 
 

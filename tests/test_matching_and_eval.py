@@ -14,6 +14,11 @@ def test_similarity_catches_reworded_titles_but_not_related_ones():
         "Decide whether Internet Explorer must be supported",
         "Decide whether to support Internet Explorer",
     ) >= 0.75
+    # Seen live during the demo recording (issues #9 and #12 in the test repo).
+    assert similarity(
+        "Dark mode toggle resets after refreshing settings page",
+        "Fix dark mode toggle resetting on settings page refresh",
+    ) >= 0.75
     assert similarity("Add CSV export", "Fix CSV export crash on large reports") < 0.75
     assert similarity("Add keyboard shortcut to submit the form", "Fix form submit error") < 0.75
 
