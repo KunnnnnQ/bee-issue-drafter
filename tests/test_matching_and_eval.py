@@ -8,6 +8,16 @@ def test_similarity_ignores_case_and_punctuation():
     assert similarity("", "anything") == 0.0
 
 
+def test_similarity_catches_reworded_titles_but_not_related_ones():
+    # Same issue drafted twice from one Bee recording, with different wording.
+    assert similarity(
+        "Decide whether Internet Explorer must be supported",
+        "Decide whether to support Internet Explorer",
+    ) >= 0.75
+    assert similarity("Add CSV export", "Fix CSV export crash on large reports") < 0.75
+    assert similarity("Add keyboard shortcut to submit the form", "Fix form submit error") < 0.75
+
+
 def test_find_duplicate_returns_best_match_above_threshold():
     existing = [
         {"number": 1, "title": "Add CSV export"},
