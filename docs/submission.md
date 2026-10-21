@@ -98,5 +98,5 @@ python, bee-cli, deepseek, github-api, github-actions
 ## Links
 
 - Repository: https://github.com/KunnnnnQ/bee-issue-drafter
-- Video: TODO
+- Video: https://youtu.be/SyOC9ALOYgs
 - Product feedback: see FEEDBACK.md and FRICTION_LOG.md in the repository

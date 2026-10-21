@@ -5,6 +5,8 @@
 Turn technical discussions recorded by a [Bee](https://bee.computer) wearable into
 reviewable GitHub issue drafts.
 
+**Demo video (1:41):** https://youtu.be/SyOC9ALOYgs
+
 Built for the **Bee (Wearable AI)** track of *Build, Ship, Shape: Amazon Developer Hackathon*.
 
 ## The problem
