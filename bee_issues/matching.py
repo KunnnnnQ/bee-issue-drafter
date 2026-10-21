@@ -58,10 +58,17 @@ def similarity(a: str, b: str) -> float:
 def find_duplicate(
     title: str, existing: list[dict], threshold: float = DUPLICATE_THRESHOLD
 ) -> tuple[dict, float] | None:
-    """Return (issue, score) for the existing issue whose title is most similar, if above threshold."""
+    """Return (issue, score) for the existing issue whose title is most similar, if above threshold.
+
+    Ties go to open issues, then to the oldest one (the original rather than a later copy).
+    """
     best: tuple[dict, float] | None = None
+    best_key: tuple | None = None
     for issue in existing:
         score = similarity(title, str(issue.get("title") or ""))
-        if score >= threshold and (best is None or score > best[1]):
-            best = (issue, score)
+        if score < threshold:
+            continue
+        key = (score, issue.get("state") != "closed", -int(issue.get("number") or 0))
+        if best_key is None or key > best_key:
+            best, best_key = (issue, score), key
     return best

@@ -38,6 +38,16 @@ def test_find_duplicate_returns_best_match_above_threshold():
     assert find_duplicate("Write onboarding docs", existing) is None
 
 
+def test_find_duplicate_prefers_open_original_on_ties():
+    existing = [  # newest first, as GitHub lists them
+        {"number": 12, "state": "closed", "title": "Dark mode toggle resets on refresh"},
+        {"number": 11, "state": "open", "title": "Dark mode toggle resets on refresh"},
+        {"number": 9, "state": "open", "title": "Dark mode toggle resets on refresh"},
+    ]
+    issue, _ = find_duplicate("Dark mode toggle resets on refresh", existing)
+    assert issue["number"] == 9
+
+
 def test_evaluate_prefers_keyword_in_title_over_mention_in_details():
     drafts = [
         {"title": "Create tests for the demo", "type": "task", "details": "Mentions the Safari bug."},
