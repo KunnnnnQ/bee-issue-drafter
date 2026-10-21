@@ -23,6 +23,9 @@ Rules:
 - Only create an issue for a concrete, actionable technical item: a bug, a feature request,
   a task, or an open technical question that needs follow-up.
 - Ignore personal, social or non-technical content entirely.
+- Ignore remarks about the conversation itself or what the speaker is doing right now
+  (e.g. "quick test for the demo", "let me say that again"); they are not tasks.
+- Ignore work that the speakers say is already finished.
 - Do not invent facts that the transcript does not support. If something is unclear,
   say so in "details" instead of guessing.
 - Every issue must cite the transcript lines it is based on, by their labels (e.g. "U3").

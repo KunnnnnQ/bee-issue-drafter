@@ -51,7 +51,16 @@ def _score(expected: dict, draft: dict) -> float:
     if keywords:
         # Substring match, so "timeout" also matches "timeouts".
         haystack = normalize(" ".join(str(draft.get(k) or "") for k in ("title", "summary", "details")))
-        return 1.0 if all(k in haystack for k in keywords) else 0.0
+        if not all(k in haystack for k in keywords):
+            return 0.0
+        # Tie-breakers: prefer drafts whose title has the keywords and whose type matches.
+        title = normalize(str(draft.get("title") or ""))
+        score = 1.0
+        if all(k in title for k in keywords):
+            score += 0.5
+        if expected.get("type") and expected["type"] == draft.get("type"):
+            score += 0.25
+        return score
     score = similarity(str(expected.get("title") or ""), str(draft.get("title") or ""))
     return score if score >= TITLE_MATCH_THRESHOLD else 0.0
 

@@ -18,6 +18,16 @@ def test_find_duplicate_returns_best_match_above_threshold():
     assert find_duplicate("Write onboarding docs", existing) is None
 
 
+def test_evaluate_prefers_keyword_in_title_over_mention_in_details():
+    drafts = [
+        {"title": "Create tests for the demo", "type": "task", "details": "Mentions the Safari bug."},
+        {"title": "Fix blank login page on Safari", "type": "bug"},
+    ]
+    result = evaluate(drafts, [{"type": "bug", "keywords": ["safari"]}])
+    assert result.matched[0][1]["title"] == "Fix blank login page on Safari"
+    assert [d["title"] for d in result.extra] == ["Create tests for the demo"]
+
+
 def test_evaluate_one_to_one_matching_and_type_accuracy():
     drafts = [
         {"title": "Validate empty email on login", "type": "bug", "summary": "500 error"},

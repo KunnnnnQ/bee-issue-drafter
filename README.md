@@ -180,9 +180,11 @@ and fake LLM / GitHub clients. They make no network calls.
 
 ## Project status
 
-Early MVP, tested end-to-end with a Bee device. On two scripted real recordings
+Early MVP, tested end-to-end with a Bee device. On three scripted real recordings
 (2026-10-21, `deepseek-chat`) it found every technical item present in the transcripts
-(6 of 6) and created no extra issues; off-topic lines and already-finished work were ignored.
+(10 of 10) and created no extra issues; off-topic lines, remarks about the recording itself
+and already-finished work were ignored. The first run produced one extra issue from
+"quick test for the demo"; a prompt rule fixed it without changing the synthetic results.
 `--input-json` is for offline development and for trying the tool without a device.
 
 Product feedback and a friction log for the hackathon are in [FEEDBACK.md](FEEDBACK.md) and
