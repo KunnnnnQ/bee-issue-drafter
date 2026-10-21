@@ -6,9 +6,9 @@
 Fits the judging examples "ambient context capture that informs a productivity workflow".
 
 **Mini challenge:** Open Source. Required fields:
-- Contribution URL: TODO: bee-cli pull request URL (branch:
-  https://github.com/KunnnnnQ/bee-cli/tree/feat/now-hours-window — adds `bee now --hours N`
-  and a clearer empty state, with tests; found while building this project, see FRICTION_LOG #2)
+- Contribution URL: https://github.com/bee-computer/bee-cli/pull/27 — adds `bee now --hours N`
+  and a clearer empty state, with tests; found while building this project (FRICTION_LOG #2).
+  Fork: https://github.com/KunnnnnQ/bee-cli/tree/feat/now-hours-window
 - Project repository URL: https://github.com/KunnnnnQ/bee-issue-drafter
 - GitHub username: KunnnnnQ
 - What / how / why: new MIT-licensed tool created during the hackathon; Bee CLI → LLM with
