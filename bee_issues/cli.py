@@ -199,8 +199,9 @@ def _watch_once(args: argparse.Namespace, settings: Settings, state_file: Path) 
     recent = bee_client.list_conversations(limit=args.limit, bee_bin=settings.bee_bin)
     seen = _load_seen(state_file)
     if seen is None:
-        # First run: only conversations recorded from now on are drafted.
-        seen = {int(c["id"]) for c in recent}
+        # First run: skip finished conversations. One still being captured counts as new,
+        # so starting `watch` in the middle of a recording does not lose it.
+        seen = {int(c["id"]) for c in recent if c.get("state") == "COMPLETED"}
         _save_seen(state_file, seen)
         print(f"Watching Bee. Skipping {len(seen)} existing conversation(s); new ones will be drafted.")
         return

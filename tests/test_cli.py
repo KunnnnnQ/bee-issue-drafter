@@ -167,3 +167,21 @@ def test_watch_skips_existing_then_drafts_new_completed(tmp_path, fixture_path, 
 
     assert cli.main(watch) == 0  # already handled
     assert fetched == [4242]
+
+
+def test_watch_started_mid_recording_still_drafts_it(tmp_path, fixture_path, monkeypatch):
+    from bee_issues import bee_client
+
+    conversation = bee_client.parse_conversation(json.loads(fixture_path.read_text(encoding="utf-8")))
+    recent = [{"id": 1, "state": "COMPLETED", "start_time": 1},
+              {"id": 4242, "state": "CAPTURING", "start_time": 2}]
+    fetched = []
+    monkeypatch.setattr(bee_client, "list_conversations", lambda limit, bee_bin=None: list(recent))
+    monkeypatch.setattr(bee_client, "get_conversation", lambda cid, bee_bin=None: fetched.append(cid) or conversation)
+    monkeypatch.setattr(llm, "complete", lambda system, user, settings: LLM_REPLY)
+    watch = ["--env-file", "none", "watch", "--once", "--out-dir", str(tmp_path)]
+
+    assert cli.main(watch) == 0  # first run while 4242 is still being captured
+    recent[1]["state"] = "COMPLETED"
+    assert cli.main(watch) == 0
+    assert fetched == [4242]
