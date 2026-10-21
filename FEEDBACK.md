@@ -2,8 +2,6 @@
 
 Answers to the hackathon's product feedback questions, one section per tool.
 
-> Lines marked **TODO** still need first-hand answers before submitting.
-
 ## Bee CLI (`@beeai/cli` 0.7.3, Windows 11)
 
 **Which tools did you use and for what?**

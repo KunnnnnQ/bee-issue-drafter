@@ -4,8 +4,6 @@ Moments where building with Bee slowed me down, in the order they happened.
 Each entry uses the fields requested by the hackathon: task, steps, expected vs. actual,
 severity, workaround and suggestion.
 
-> Entries marked **TODO** still need first-hand details before submitting.
-
 ## 1. Fetching one conversation from PowerShell
 
 - **Task:** Export one conversation as JSON on Windows.
@@ -22,9 +20,9 @@ severity, workaround and suggestion.
 - **Expected:** To see my latest recordings, or be told which time range was searched. **Actual:** Only "- (none)"; the 10-hour window is hard-coded and only mentioned in the README.
 - **Severity:** Low
 - **Workaround:** Used `bee conversations list --limit 3` instead.
-- **Suggestion / contribution:** I opened a change that adds `bee now --hours N` and prints
-  "(none in the last N hours)", with tests:
-  https://github.com/KunnnnnQ/bee-cli/tree/feat/now-hours-window
+- **Suggestion / contribution:** I opened a pull request that adds `bee now --hours N` and
+  prints "(none in the last N hours)", with tests:
+  https://github.com/bee-computer/bee-cli/pull/27
 
 ## 3. Finding the JSON shape of a conversation
 
